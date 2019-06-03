@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/pflag"
 
 	"github.com/elastic/apm-server/beater"
+	"github.com/elastic/apm-server/custom_server"
 	"github.com/elastic/apm-server/idxmgmt"
-	_ "github.com/elastic/apm-server/include"
 	"github.com/elastic/beats/libbeat/cmd"
 	"github.com/elastic/beats/libbeat/cmd/instance"
 	"github.com/elastic/beats/libbeat/common"
@@ -44,6 +44,21 @@ const IdxPattern = "apm"
 var RootCmd *cmd.BeatsRootCmd
 
 func init() {
+
+	// r := mux.NewRouter()
+
+	// r.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+	// 	// vars := mux.Vars(r)
+	// 	// title := vars["title"]
+	// 	// page := vars["page"]
+
+	// 	fmt.Fprintf(w, "You've requested the book: on page \n")
+	// }).Methods("GET")
+
+	// go http.ListenAndServe(":9000", r)
+
+	s := custom_server.NewServer()
+	s.Start()
 	overrides := common.MustNewConfigFrom(map[string]interface{}{
 		"logging": map[string]interface{}{
 			"metrics": map[string]interface{}{
