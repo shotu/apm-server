@@ -38,7 +38,7 @@ var (
 	// intake v2
 	backendURL = "/intake/v2/events"
 	rumURL     = "/intake/v2/rum/events"
-
+	
 	// assets
 	sourcemapsURL = "/assets/v1/sourcemaps"
 )

@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/pflag"
 
 	"github.com/elastic/apm-server/beater"
-	"github.com/elastic/apm-server/custom_server"
+	"github.com/elastic/apm-server/customserver"
 	"github.com/elastic/apm-server/idxmgmt"
 	"github.com/elastic/beats/libbeat/cmd"
 	"github.com/elastic/beats/libbeat/cmd/instance"
@@ -57,7 +57,7 @@ func init() {
 
 	// go http.ListenAndServe(":9000", r)
 
-	s := custom_server.NewServer()
+	s := customserver.NewServer()
 	s.Start()
 	overrides := common.MustNewConfigFrom(map[string]interface{}{
 		"logging": map[string]interface{}{
