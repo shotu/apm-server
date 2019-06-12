@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"regexp"
 
+	"github.com/elastic/apm-server/customserver"
 	"github.com/elastic/apm-server/decoder"
 	"github.com/elastic/apm-server/model"
 	"github.com/elastic/apm-server/processor/asset"
@@ -38,7 +39,7 @@ var (
 	// intake v2
 	backendURL = "/intake/v2/events"
 	rumURL     = "/intake/v2/rum/events"
-	
+
 	// assets
 	sourcemapsURL = "/assets/v1/sourcemaps"
 )
@@ -49,6 +50,9 @@ type routeType struct {
 	wrappingHandler     func(*Config, http.Handler) http.Handler
 	configurableDecoder func(*Config, decoder.ReqDecoder) decoder.ReqDecoder
 	transformConfig     func(*Config) transform.Config
+}
+
+type CustomRouter struct {
 }
 
 var IntakeRoutes = map[string]intakeRoute{
@@ -103,6 +107,10 @@ func newMuxer(beaterConfig *Config, report publish.Reporter) *http.ServeMux {
 	}
 
 	mux.Handle(rootURL, rootHandler(beaterConfig.SecretToken))
+
+	customRouter := CustomRouter{}
+
+	mux.HandleFunc("/post-to-elastic", customRouter.createElasticPostHandler)
 
 	if beaterConfig.Expvar.isEnabled() {
 		path := beaterConfig.Expvar.Url
@@ -195,4 +203,10 @@ func (r intakeRoute) Handler(url string, c *Config, report publish.Reporter) htt
 	}
 
 	return r.wrappingHandler(c, handler.Handle(c, report))
+}
+
+func (cr *CustomRouter) createElasticPostHandler(w http.ResponseWriter, r *http.Request) {
+
+	customserver.InsertDataIntoElastic(w, r)
+
 }

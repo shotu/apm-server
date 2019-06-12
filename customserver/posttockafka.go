@@ -16,15 +16,6 @@ type Job struct {
 	Salary      string `json:"salary"`
 }
 
-// func main() {
-
-// 	router := mux.NewRouter().StrictSlash(true)
-// 	router.HandleFunc("/jobs", jobsPostHandler).Methods("POST")
-
-// 	log.Fatal(http.ListenAndServe(":9090", router))
-
-// }
-
 func jobsPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	//Retrieve body from http request
@@ -60,14 +51,10 @@ func jobsPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func saveJobToKafka(job Job) {
-
 	fmt.Println("save to kafka")
-
 	jsonString, err := json.Marshal(job)
-
 	jobString := string(jsonString)
 	fmt.Print(jobString)
-
 	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
 	if err != nil {
 		panic(err)

@@ -14,13 +14,16 @@ func NewCustomRouter(router *mux.Router) *mux.Router {
 	customRouter := CustomRouter{}
 	router.HandleFunc("/", customRouter.createUserHandler).Methods("GET")
 	router.HandleFunc("/jobs", customRouter.createKafkaPostHandler).Methods("POST")
+	router.HandleFunc("/post-to-elastic", customRouter.createElasticPostHandler).Methods("POST")
 	return router
 }
 
-func (ur *CustomRouter) createKafkaPostHandler(w http.ResponseWriter, r *http.Request) {
-
+func (cr *CustomRouter) createKafkaPostHandler(w http.ResponseWriter, r *http.Request) {
 	jobsPostHandler(w, r)
+}
 
+func (cr *CustomRouter) createElasticPostHandler(w http.ResponseWriter, r *http.Request) {
+	InsertDataIntoElastic(w, r)
 }
 
 func (ur *CustomRouter) createUserHandler(w http.ResponseWriter, r *http.Request) {

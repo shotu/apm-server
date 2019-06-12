@@ -19,6 +19,7 @@ package publish
 
 import (
 	"context"
+	"fmt"
 	"runtime"
 	"sync"
 	"time"
@@ -148,12 +149,12 @@ func (p *publisher) processPendingReq(req PendingReq) {
 		tx = p.tracer.StartTransaction("ProcessPending", "Publisher")
 		defer tx.End()
 	}
-
+	fmt.Print(req)
 	for _, transformable := range req.Transformables {
 		span := tx.StartSpan("Transform", "Publisher", nil)
 		events := transformable.Transform(req.Tcontext)
 		span.End()
-
+		// fmt.Print(events)
 		span = tx.StartSpan("PublishAll", "Publisher", nil)
 		p.client.PublishAll(events)
 		span.End()

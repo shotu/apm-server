@@ -237,12 +237,12 @@ apm-server:
 # Configure what output to use when sending the data collected by apm-server.
 
 #-------------------------- Elasticsearch output ------------------------------
-output.elasticsearch:
+# output.elasticsearch:
   # Array of hosts to connect to.
   # Scheme and port can be left out and will be set to the default (http and 9200)
   # In case you specify and additional path, the scheme is required: http://localhost:9200/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:9200
-  hosts: ["localhost:9200"]
+  # hosts: ["localhost:9200"]
 
   # Boolean flag to enable or disable the output module.
   #enabled: true
@@ -343,7 +343,7 @@ output.elasticsearch:
   # The maximum number of seconds to wait before attempting to connect to
   # Elasticsearch after a network error. The default is 60s.
   #backoff.max: 60s
-
+  
   # Configure http request timeout before failing an request to Elasticsearch.
   #timeout: 90
 
@@ -390,9 +390,9 @@ output.elasticsearch:
   #enabled: false
 
   # Configure JSON encoding
-  #codec.json:
+  # codec.json:
     # Pretty-print JSON event
-    #pretty: false
+    # pretty: false
 
     # Configure escaping HTML symbols in strings.
     #escape_html: false
@@ -492,18 +492,22 @@ output.elasticsearch:
   #ssl.renegotiation: never
 
 #------------------------------- Kafka output ----------------------------------
-#output.kafka:
+output.kafka:
   # Boolean flag to enable or disable the output module.
-  #enabled: false
+  enabled: true
 
   # The list of Kafka broker addresses from where to fetch the cluster metadata.
   # The cluster metadata contain the actual Kafka brokers events are published
   # to.
-  #hosts: ["localhost:9092"]
+  hosts: ["localhost:9092"]
 
   # The Kafka topic used for produced events. The setting can be a format string
   # using any event field. To set the topic from document type use `%{[type]}`.
-  #topic: beats
+  # topic: "%{[type]}"
+  topic: '%{[fields.processor.event]}'
+  # topic: '%{[fields.beat.hostname]}'
+  # topic: beats
+  # topic: '%{[fields.processor.event]}'
 
   # The Kafka event key setting. Use format string to create unique event key.
   # By default no event key will be generated.
@@ -732,7 +736,7 @@ output.elasticsearch:
 # append ?pretty to the URL.
 
 # Defines if the HTTP endpoint is enabled.
-#http.enabled: false
+# http.enabled: true
 
 # The HTTP endpoint will bind to this hostname or IP address. It is recommended to use only localhost.
 #http.host: localhost
